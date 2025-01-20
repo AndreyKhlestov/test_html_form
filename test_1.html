@@ -38,16 +38,25 @@
 
             // Отправляем данные в бот
             // tg.sendData(JSON.stringify(data));
-            tg.sendData(JSON.stringify(data), (error) => {
-                if (error) {
-                    tg.showAlert("Ошибка при отправке данных:");
-                } else {
-                    tg.showAlert("Данные успешно отправлены");
-                }
-            });
+            
+            // tg.sendData(JSON.stringify(data), (error) => {
+            //     if (error) {
+            //         tg.showAlert("Ошибка при отправке данных:");
+            //     } else {
+            //         tg.showAlert("Данные успешно отправлены");
+            //     }
+            // });
+
+             try {
+                tg.sendData(JSON.stringify(data));
+                tg.showAlert("Данные отправлены!");
+            } catch (error) {
+                console.error("Ошибка при отправке данных:", error);
+                tg.showAlert("Ошибка при отправке данных!");
+            }
 
             // Показываем сообщение об успехе
-            tg.showAlert("Данные отправлены!");
+            // tg.showAlert("Данные отправлены!");
         }
 
         // Настройка параметров WebApp (например, изменяем цвет темы)
