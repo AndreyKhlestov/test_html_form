@@ -109,19 +109,8 @@
     </form>
 
     <script>
-        // Пример данных видимости и обязательности, полученных от бота
-        // const fieldConfig = {
-        //     name: true,
-        //     birthdate: false,
-        //     inn: true,
-        //     snils: false,
-        //     passport: true,
-        //     telephone: true,
-        //     cadnumber: false,
-        //     car: true,
-        //     vin: false,
-        //     referat: false
-        // };
+        let tg = window.Telegram.WebApp;
+    
         const urlParams = new URLSearchParams(window.location.search);
         const configString = urlParams.get('config');
         
@@ -173,11 +162,11 @@
             });
 
             // Отправка данных в Telegram WebApp
-            Telegram.WebApp.sendData(JSON.stringify(formData));
+            tg.sendData(JSON.stringify(formData));
         });
 
         // Настройка Telegram WebApp
-        Telegram.WebApp.ready();
+        tg.ready();
     </script>
 </body>
 </html>
