@@ -110,18 +110,32 @@
 
     <script>
         // Пример данных видимости и обязательности, полученных от бота
-        const fieldConfig = {
-            name: true,
-            birthdate: false,
-            inn: true,
-            snils: false,
-            passport: true,
-            telephone: true,
-            cadnumber: false,
-            car: true,
-            vin: false,
-            referat: false
-        };
+        // const fieldConfig = {
+        //     name: true,
+        //     birthdate: false,
+        //     inn: true,
+        //     snils: false,
+        //     passport: true,
+        //     telephone: true,
+        //     cadnumber: false,
+        //     car: true,
+        //     vin: false,
+        //     referat: false
+        // };
+        const urlParams = new URLSearchParams(window.location.search);
+        const configString = urlParams.get('config');
+        
+        // Декодирование и преобразование в объект
+        let fieldConfig = {};
+        if (configString) {
+            try {
+                fieldConfig = JSON.parse(decodeURIComponent(configString));
+                console.log("Конфигурация полей:", fieldConfig);
+            } catch (e) {
+                console.error("Ошибка обработки конфигурации:", e);
+            }
+        }
+        
 
         // Функция настройки видимости и обязательности
         function configureFields(config) {
