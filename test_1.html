@@ -47,13 +47,11 @@
             //     }
             // });
 
-             try {
-                tg.sendData(JSON.stringify(data));
-                tg.showAlert("Данные отправлены!");
-            } catch (error) {
-                console.error("Ошибка при отправке данных:", error);
-                tg.showAlert("Ошибка при отправке данных!");
-            }
+             
+            tg.sendData(JSON.stringify(data));
+            tg.showAlert("Данные отправлены!");
+            tg.close()
+           
 
             // Показываем сообщение об успехе
             // tg.showAlert("Данные отправлены!");
