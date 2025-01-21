@@ -163,6 +163,7 @@
 
             // Отправка данных в Telegram WebApp
             tg.sendData(JSON.stringify(formData));
+            tg.close()
         });
 
         // Настройка Telegram WebApp
