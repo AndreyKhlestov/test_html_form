@@ -55,13 +55,6 @@
         <h2>Выберите услуги</h2>
         <div id="services"></div> <!-- Здесь появятся чекбоксы -->
 
-<!--        &lt;!&ndash; Чекбоксы услуг &ndash;&gt;-->
-<!--        <div id="services">-->
-<!--            <label><input type="checkbox" class="service-checkbox" data-fields="full_name,birthdate,inn" value="snils"> Отчет о СНИЛС</label><br>-->
-<!--            <label><input type="checkbox" class="service-checkbox" data-fields="full_name,birthdate,year,inn" value="ndfl"> Справка по форме 2-НДФЛ</label><br>-->
-<!--        </div>-->
-
-
         <h2>Заполните заявку</h2>
         <!-- Поле для фотографии -->
         <div class="field" id="field-photo">
@@ -110,7 +103,6 @@
             <label for="region">Регион</label>
             <input type="text" id="region" name="region" placeholder="Введите регион">
         </div>
-
 
         <!-- Поле для ИНН юридического лица -->
         <div class="field" id="field-company_tax_id">
@@ -179,99 +171,159 @@
             }
         }
 
-        const servicesContainer = document.getElementById('services');
-        // const fieldsContainer = document.getElementById('fields-container');
-        let allFields = new Set();
-
-        // let fieldConfig = {};
-        // if (configString) {
-        //     try {
-        //         fieldConfig = JSON.parse(decodeURIComponent(configString));
-        //         console.log("Конфигурация полей:", fieldConfig);
-        //     } catch (e) {
-        //         console.error("Ошибка обработки конфигурации:", e);
-        //     }
-        // }
-
 
         // Создаем чекбоксы на основе servicesData
+        const servicesContainer = document.getElementById('services');
         Object.keys(servicesData).forEach(serviceKey => {
-            const service = servicesData[serviceKey];
+            const service = servicesData[serviceKey]; // Получаем объект услуги
 
+            // Создаем чекбокс для услуги
             const checkbox = document.createElement('input');
-            checkbox.type = "checkbox";
-            checkbox.classList.add("service-checkbox");
-            checkbox.dataset.requiredFields = JSON.stringify(service.required_data);
-            checkbox.value = serviceKey;
+            checkbox.type = "checkbox"; // Чекбокс
+            checkbox.classList.add("service-checkbox"); // Добавляем класс для стилизации и работы с JS
+            checkbox.dataset.requiredFields = JSON.stringify(service.required_data); // Сохраняем список обязательных полей
+            checkbox.value = serviceKey; // Уникальный ключ услуги
 
+            // Переводим цену в TRX (делим на 1 000 000 и убираем лишние нули)
+            const priceTrx = Number((service.price / 1000000).toFixed(6));
+
+            // Создаем метку для чекбокса (label)
             const label = document.createElement('label');
-            label.appendChild(checkbox);
-            label.appendChild(document.createTextNode(` ${service.name} - ${service.price}₽`));
+            label.appendChild(checkbox); // Вставляем чекбокс внутрь label
+            label.appendChild(document.createTextNode(` ${service.name} - ${priceTrx} TRX`)); // Добавляем название услуги и цену
 
-            servicesContainer.appendChild(label);
-            servicesContainer.appendChild(document.createElement("br"));
+            servicesContainer.appendChild(label);  // Добавляем чекбокс с меткой в контейнер
+            servicesContainer.appendChild(document.createElement("br")); // Добавляем перенос строки для визуального разделения
+        });
+
+        // Функция для обновления видимости полей
+        function updateFields() {
+            let requiredFields = new Set();  // Множество обязательных полей, которые должны быть видимы.
+
+            // Собираем все необходимые поля из выбранных чекбоксов (услуг)
+            document.querySelectorAll('.service-checkbox:checked').forEach(checkbox => {
+                const requiredGroups = JSON.parse(checkbox.dataset.requiredFields); // Получаем группы обязательных полей
+                requiredGroups.forEach(group => {
+                    group.forEach(field => requiredFields.add(field)); // Добавляем все нужные поля
+                });
+            });
+
+            // Перебираем все поля формы
+            document.querySelectorAll('.field').forEach(fieldDiv => {
+                const input = fieldDiv.querySelector('input, textarea, select');
+                if (!input) return; // Пропускаем контейнеры без полей ввода
+
+                const fieldId = input.name; // Получаем имя поля
+
+                if (requiredFields.has(fieldId)) {
+                    fieldDiv.classList.remove('hidden');  // Показываем поле
+                } else {
+                    fieldDiv.classList.add('hidden');  // Скрываем поле
+                    input.value = ""; // Очищаем поле
+                }
+            });
+        }
+
+        // Назначаем обработчики изменения чекбоксов
+        document.querySelectorAll('.service-checkbox').forEach(checkbox => {
+            checkbox.addEventListener('change', updateFields);
+        });
+
+        // Скрываем все поля при загрузке
+        document.addEventListener("DOMContentLoaded", function () {
+            document.querySelectorAll('.field').forEach(field => field.classList.add('hidden'));
         });
 
 
-
-
-
-
-
-
-
-        // Функция настройки видимости и обязательности
-        function configureFields(config) {
-            // Получаем все элементы формы с классом "field"
-            const allFields = document.querySelectorAll('.field');
-
-            allFields.forEach(field => field.classList.remove('hidden'));
-
-            // // Если `config` пустой (нет данных) — показываем все поля
-            // if (Object.keys(config).length === 0) {
-            //     allFields.forEach(field => field.classList.remove('hidden'));
-            //     return;
-            // }
-
-            // // Если есть `config`, скрываем или делаем обязательными нужные поля
-            // allFields.forEach(field => {  // Проходим по каждому полю формы
-            //     const input = field.querySelector('input, textarea');  // Получаем поле ввода (input или textarea) внутри контейнера
-            //     const fieldId = input.name;  // Получаем имя поля (name), которое будет использоваться для проверки в конфигурации
-            //
-            //     // Если поле указано в конфиге, обрабатываем его
-            //     if (fieldId in config) {
-            //         field.classList.remove('hidden'); // Делаем поле видимым
-            //         // Если в конфигурации указано "true", делаем поле обязательным
-            //         if (config[fieldId]) {
-            //             input.setAttribute('required', 'required'); // Поле обязательное
-            //         } else {
-            //             input.removeAttribute('required'); // Поле необязательное
-            //         }
-            //     } else {
-            //         field.classList.add('hidden'); // Скрываем поле, если его нет в конфиге
-            //     }
-            // });
-        }
-
-        // Применяем конфигурацию
-        configureFields(fieldConfig);
-
-        // Отправка данных формы
+        // Проверка и Отправка данных формы
         const form = document.getElementById('orderForm');
         form.addEventListener('submit', function (event) {
+            // Проверка выбора услуг
+            let selectedServices = document.querySelectorAll('.service-checkbox:checked');
+            if (selectedServices.length === 0) {
+                alert("Выберите хотя бы одну услугу!");
+                event.preventDefault();  // Отменяем отправку формы
+                return;
+            }
+
+            let errors = [];
+
+            // Проверка заполненности требуемых полей для каждой выбранной услуги
+            selectedServices.forEach(checkbox => {
+                const serviceName = checkbox.value;
+                const requiredGroups = JSON.parse(checkbox.dataset.requiredFields);  // Получаем группы обязательных полей
+
+                let groupValid = false; // Флаг: хотя бы одна группа заполнена
+                let missingGroups = []; // Список незаполненных полей
+
+                requiredGroups.forEach(group => {
+                    let missingFields = []; // Поля, которые отсутствуют в данной группе
+                    let groupFilled = true; // Флаг: вся группа заполнена
+
+                    group.forEach(fieldId => {
+                        const input = document.getElementById(fieldId);
+                        if (!input || input.value.trim() === "") {
+                            missingFields.push(getFieldLabel(fieldId)); // Добавляем название пустого поля
+                            groupFilled = false; // Хоть одно поле пустое – группа невалидна
+                        }
+                    });
+                    if (groupFilled) {
+                        groupValid = true; // Если группа заполнена, вся проверка успешна
+                    } else {
+                        missingGroups.push(missingFields.join(" и "));  // Добавляем незаполненные поля группы
+                    }
+                });
+                if (!groupValid) {
+                    errors.push(`Заполните данные для услуги: ${servicesData[serviceName].name}\n\nВарианты заполнения:\n` +
+                        missingGroups.map(group => "- " + group).join("\n"));
+                }
+            });
+
+            if (errors.length > 0) {
+                alert(errors.join("\n"));
+                event.preventDefault(); // Отменяем отправку формы
+            }
+
             event.preventDefault();  // Предотвращаем стандартное поведение формы
 
-            const formData = {};  // Объект для хранения данных формы
-
-            // Собираем данные из формы
+            // Собираем данные из формы в order_data (только заполненные поля)
+            let orderData = {};
             new FormData(form).forEach((value, key) => {
-                formData[key] = value;
+                if (value instanceof File) {
+                    if (value.name) { // Проверяем, был ли выбран файл
+                        orderData[key] = value.name; // Передаем только имя файла
+                    }
+                } else if (typeof value === "string" && value.trim() !== "") {
+                    orderData[key] = value; // Добавляем только заполненные текстовые поля
+                }
             });
+
+            // Собираем выбранные услуги
+            let valueSelectedServices = Array.from(selectedServices).map(checkbox => checkbox.value);
+
+            // Формируем итоговый объект
+            let formData = {
+                "selected_services": valueSelectedServices, // Список выбранных услуг
+                "order_data": orderData // Заполненные данные формы
+            };
 
             // Отправка данных в Telegram WebApp
             tg.sendData(JSON.stringify(formData));
             tg.close()
         });
+
+
+        // Функция для получения названия поля из label
+        function getFieldLabel(fieldId) {
+            const input = document.getElementById(fieldId);  // Находим сам input по его id
+            if (!input) return fieldId; // Если input не найден, возвращаем сам fieldId
+
+            // Ищем <label> с атрибутом for, указывающим на этот input
+            const label = document.querySelector(`label[for="${fieldId}"]`);
+
+            // Если label найден, возвращаем его текстовое содержимое, иначе возвращаем fieldId
+            return label ? label.textContent.trim() : fieldId;
+        }
 
         // Настройка Telegram WebApp
         tg.ready();
