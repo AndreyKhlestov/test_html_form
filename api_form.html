@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Заполнение заявки</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #f7f9fc;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+            width: 90%;
+            max-width: 500px;
+            padding: 20px;
+            border-radius: 8px;
+            background: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        label {
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input, button, textarea {
+            margin-bottom: 15px;
+            padding: 10px;
+            font-size: 16px;
+        }
+        button {
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <form id="orderForm">
+        <h2>Заполните заявку</h2>
+
+        <!-- Поле для ФИО -->
+        <div class="field" id="field-name">
+            <label for="name">ФИО</label>
+            <input type="text" id="name" name="name" placeholder="Введите ФИО">
+        </div>
+
+        <!-- Поле для даты рождения -->
+        <div class="field" id="field-birthdate">
+            <label for="birthdate">Дата рождения</label>
+            <input type="date" id="birthdate" name="birthdate">
+        </div>
+
+        <!-- Поле для ИНН физического лица -->
+        <div class="field" id="field-tax_code">
+            <label for="tax_code">ИНН</label>
+            <input type="text" id="tax_code" name="tax_code" placeholder="Введите ИНН">
+        </div>
+
+        <!-- Поле для СНИЛС -->
+        <div class="field" id="field-snils">
+            <label for="snils">СНИЛС</label>
+            <input type="text" id="snils" name="social_security_number" placeholder="Введите СНИЛС">
+        </div>
+
+        <!-- Поле для паспорта -->
+        <div class="field" id="field-document">
+            <label for="document">Паспорт</label>
+            <input type="text" id="document" name="document" placeholder="Введите паспорт">
+        </div>
+
+        <!-- Поле для телефона -->
+        <div class="field" id="field-phone">
+            <label for="phone">Телефон</label>
+            <input type="tel" id="phone" name="phone" placeholder="Введите телефон">
+        </div>
+
+        <!-- Поле для адреса -->
+        <div class="field" id="field-address">
+            <label for="address_geo">Адрес</label>
+            <input type="text" id="address_geo" name="address_geo" placeholder="Введите адрес">
+        </div>
+
+        <!-- Поле для email -->
+        <div class="field" id="field-email">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" placeholder="Введите email">
+        </div>
+
+        <!-- Поле для номера автомобиля -->
+        <div class="field" id="field-vehicle_number">
+            <label for="vehicle_number">Номер автомобиля</label>
+            <input type="text" id="vehicle_number" name="vehicle_number" placeholder="Введите номер автомобиля">
+        </div>
+
+        <!-- Поле для ВИН-кода автомобиля -->
+        <div class="field" id="field-vin">
+            <label for="vin">ВИН-код</label>
+            <input type="text" id="vin" name="vehicle_vin" placeholder="Введите ВИН-код">
+        </div>
+
+        <!-- Поле для ИНН юридического лица -->
+        <div class="field" id="field-company_tax_id">
+            <label for="company_tax_id">ИНН ЮЛ</label>
+            <input type="text" id="company_tax_id" name="company_tax_id" placeholder="Введите ИНН компании">
+        </div>
+
+        <!-- Поле для ОГРН юридического лица -->
+        <div class="field" id="field-company_prsn">
+            <label for="company_prsn">ОГРН ЮЛ</label>
+            <input type="text" id="company_prsn" name="company_prsn" placeholder="Введите ОГРН компании">
+        </div>
+
+        <!-- Поле для ОГРНИП -->
+        <div class="field" id="field-individual_enterpreneur_registration_code">
+            <label for="individual_enterpreneur_registration_code">ОГРНИП</label>
+            <input type="text" id="individual_enterpreneur_registration_code" name="individual_enterpreneur_registration_code" placeholder="Введите ОГРНИП">
+        </div>
+
+        <!-- Поле для водительского удостоверения -->
+        <div class="field" id="field-driver_license">
+            <label for="driver_license">Водительское удостоверение</label>
+            <input type="text" id="driver_license" name="driver_license" placeholder="Введите ВУ">
+        </div>
+
+        <!-- Поле для даты выдачи ВУ -->
+        <div class="field" id="field-driver_license_date">
+            <label for="driver_license_date">Дата выдачи ВУ</label>
+            <input type="date" id="driver_license_date" name="driver_license_date">
+        </div>
+
+        <button type="submit">Отправить</button>
+    </form>
+
+    <script>
+        let tg = window.Telegram.WebApp;
+
+        // Отправка данных формы
+        const form = document.getElementById('orderForm');
+        form.addEventListener('submit', function (event) {
+            event.preventDefault();  // Предотвращаем стандартное поведение формы
+
+            const formData = {};  // Объект для хранения данных формы
+
+            // Собираем данные из формы
+            new FormData(form).forEach((value, key) => {
+                formData[key] = value;
+            });
+
+            // Отправка данных в Telegram WebApp
+            tg.sendData(JSON.stringify(formData));
+            tg.close()
+        });
+
+        // Настройка Telegram WebApp
+        tg.ready();
+    </script>
+</body>
+</html>
