@@ -169,15 +169,54 @@
         const configString = urlParams.get('config');
 
         // Декодирование и преобразование в объект
-        let fieldConfig = {};
+        let servicesData = {};
         if (configString) {
             try {
-                fieldConfig = JSON.parse(decodeURIComponent(configString));
-                console.log("Конфигурация полей:", fieldConfig);
+                servicesData = JSON.parse(decodeURIComponent(configString));
             } catch (e) {
                 console.error("Ошибка обработки конфигурации:", e);
             }
         }
+
+        const servicesContainer = document.getElementById('services');
+        // const fieldsContainer = document.getElementById('fields-container');
+        let allFields = new Set();
+
+        // let fieldConfig = {};
+        // if (configString) {
+        //     try {
+        //         fieldConfig = JSON.parse(decodeURIComponent(configString));
+        //         console.log("Конфигурация полей:", fieldConfig);
+        //     } catch (e) {
+        //         console.error("Ошибка обработки конфигурации:", e);
+        //     }
+        // }
+
+
+        // Создаем чекбоксы на основе servicesData
+        Object.keys(servicesData).forEach(serviceKey => {
+            const service = servicesData[serviceKey];
+
+            const checkbox = document.createElement('input');
+            checkbox.type = "checkbox";
+            checkbox.classList.add("service-checkbox");
+            checkbox.dataset.requiredFields = JSON.stringify(service.required_data);
+            checkbox.value = serviceKey;
+
+            const label = document.createElement('label');
+            label.appendChild(checkbox);
+            label.appendChild(document.createTextNode(` ${service.name} - ${service.price}₽`));
+
+            servicesContainer.appendChild(label);
+            servicesContainer.appendChild(document.createElement("br"));
+        });
+
+
+
+
+
+
+
 
 
         // Функция настройки видимости и обязательности
@@ -185,30 +224,32 @@
             // Получаем все элементы формы с классом "field"
             const allFields = document.querySelectorAll('.field');
 
-            // Если `config` пустой (нет данных) — показываем все поля
-            if (Object.keys(config).length === 0) {
-                allFields.forEach(field => field.classList.remove('hidden'));
-                return;
-            }
+            allFields.forEach(field => field.classList.remove('hidden'));
 
-            // Если есть `config`, скрываем или делаем обязательными нужные поля
-            allFields.forEach(field => {  // Проходим по каждому полю формы
-                const input = field.querySelector('input, textarea');  // Получаем поле ввода (input или textarea) внутри контейнера
-                const fieldId = input.name;  // Получаем имя поля (name), которое будет использоваться для проверки в конфигурации
+            // // Если `config` пустой (нет данных) — показываем все поля
+            // if (Object.keys(config).length === 0) {
+            //     allFields.forEach(field => field.classList.remove('hidden'));
+            //     return;
+            // }
 
-                // Если поле указано в конфиге, обрабатываем его
-                if (fieldId in config) {
-                    field.classList.remove('hidden'); // Делаем поле видимым
-                    // Если в конфигурации указано "true", делаем поле обязательным
-                    if (config[fieldId]) {
-                        input.setAttribute('required', 'required'); // Поле обязательное
-                    } else {
-                        input.removeAttribute('required'); // Поле необязательное
-                    }
-                } else {
-                    field.classList.add('hidden'); // Скрываем поле, если его нет в конфиге
-                }
-            });
+            // // Если есть `config`, скрываем или делаем обязательными нужные поля
+            // allFields.forEach(field => {  // Проходим по каждому полю формы
+            //     const input = field.querySelector('input, textarea');  // Получаем поле ввода (input или textarea) внутри контейнера
+            //     const fieldId = input.name;  // Получаем имя поля (name), которое будет использоваться для проверки в конфигурации
+            //
+            //     // Если поле указано в конфиге, обрабатываем его
+            //     if (fieldId in config) {
+            //         field.classList.remove('hidden'); // Делаем поле видимым
+            //         // Если в конфигурации указано "true", делаем поле обязательным
+            //         if (config[fieldId]) {
+            //             input.setAttribute('required', 'required'); // Поле обязательное
+            //         } else {
+            //             input.removeAttribute('required'); // Поле необязательное
+            //         }
+            //     } else {
+            //         field.classList.add('hidden'); // Скрываем поле, если его нет в конфиге
+            //     }
+            // });
         }
 
         // Применяем конфигурацию
