@@ -53,6 +53,11 @@
 <body>
     <form id="orderForm">
         <h2>Заполните заявку</h2>
+        <!-- Поле для фотографии -->
+        <div class="field" id="field-photo">
+            <label for="photo">Фотография</label>
+            <input type="file" id="photo" name="photo" accept="image/*">
+        </div>
 
         <!-- Поле для ФИО -->
         <div class="field" id="field-name">
@@ -84,6 +89,12 @@
             <input type="text" id="document" name="document" placeholder="Введите паспорт">
         </div>
 
+        <!-- Поле для списка паспортов -->
+        <div class="field" id="field-documents">
+            <label for="documents">Документы</label>
+            <input type="text" id="documents" name="documents" placeholder="Введите список паспортов">
+        </div>
+
         <!-- Поле для телефона -->
         <div class="field" id="field-phone">
             <label for="phone">Телефон</label>
@@ -96,6 +107,12 @@
             <input type="text" id="address_geo" name="address_geo" placeholder="Введите адрес">
         </div>
 
+        <!-- Поле для региона -->
+        <div class="field" id="field-region">
+            <label for="region">Регион</label>
+            <input type="text" id="region" name="region" placeholder="Введите регион">
+        </div>
+
         <!-- Поле для email -->
         <div class="field" id="field-email">
             <label for="email">Email</label>
@@ -106,6 +123,18 @@
         <div class="field" id="field-vehicle_number">
             <label for="vehicle_number">Номер автомобиля</label>
             <input type="text" id="vehicle_number" name="vehicle_number" placeholder="Введите номер автомобиля">
+        </div>
+
+        <!-- Поле для водительского удостоверения -->
+        <div class="field" id="field-driver_license">
+            <label for="driver_license">Водительское удостоверение</label>
+            <input type="text" id="driver_license" name="driver_license" placeholder="Введите ВУ">
+        </div>
+
+        <!-- Поле для даты выдачи ВУ -->
+        <div class="field" id="field-driver_license_date">
+            <label for="driver_license_date">Дата выдачи ВУ</label>
+            <input type="date" id="driver_license_date" name="driver_license_date">
         </div>
 
         <!-- Поле для ВИН-кода автомобиля -->
@@ -126,22 +155,40 @@
             <input type="text" id="company_prsn" name="company_prsn" placeholder="Введите ОГРН компании">
         </div>
 
+        <!-- Поле для квартала ИНН/ОГРН -->
+        <div class="field" id="field-tax_quarter">
+            <label for="tax_quarter">Квартал ИНН/ОГРН</label>
+            <input type="text" id="tax_quarter" name="tax_quarter" placeholder="Введите квартал">
+        </div>
+
+        <!-- Поле для года ИНН/ОГРН -->
+        <div class="field" id="field-tax_year">
+            <label for="tax_year">Год ИНН/ОГРН</label>
+            <input type="text" id="tax_year" name="tax_year" placeholder="Введите год">
+        </div>
+
         <!-- Поле для ОГРНИП -->
         <div class="field" id="field-individual_enterpreneur_registration_code">
             <label for="individual_enterpreneur_registration_code">ОГРНИП</label>
             <input type="text" id="individual_enterpreneur_registration_code" name="individual_enterpreneur_registration_code" placeholder="Введите ОГРНИП">
         </div>
 
-        <!-- Поле для водительского удостоверения -->
-        <div class="field" id="field-driver_license">
-            <label for="driver_license">Водительское удостоверение</label>
-            <input type="text" id="driver_license" name="driver_license" placeholder="Введите ВУ">
+        <!-- Поле для БИК банка -->
+        <div class="field" id="field-bank_bik">
+            <label for="bank_bik">БИК банка</label>
+            <input type="text" id="bank_bik" name="bank_bik" placeholder="Введите БИК банка">
         </div>
 
-        <!-- Поле для даты выдачи ВУ -->
-        <div class="field" id="field-driver_license_date">
-            <label for="driver_license_date">Дата выдачи ВУ</label>
-            <input type="date" id="driver_license_date" name="driver_license_date">
+        <!-- Поле для номера счета банка -->
+        <div class="field" id="field-bank_account_number">
+            <label for="bank_account_number">Номер счета банка</label>
+            <input type="text" id="bank_account_number" name="bank_account_number" placeholder="Введите номер счета">
+        </div>
+
+        <!-- Поле для периода банка -->
+        <div class="field" id="field-bank_period">
+            <label for="bank_period">Период для банковских данных</label>
+            <input type="text" id="bank_period" name="bank_period" placeholder="Введите период">
         </div>
 
         <button type="submit">Отправить</button>
