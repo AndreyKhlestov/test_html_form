@@ -162,43 +162,16 @@
         const urlParams = new URLSearchParams(window.location.search);
         const configString = urlParams.get('config');
 
-
-
-        function fixBase64(encodedStr) {
-            // Исправляем возможные ошибки URL-safe base64
-            encodedStr = encodedStr.replace(/-/g, '+').replace(/_/g, '/');
-
-            // Добавляем недостающие символы "=" (base64 требует кратности 4)
-            while (encodedStr.length % 4 !== 0) {
-                encodedStr += '=';
-            }
-
-            return encodedStr;
-        }
-
-
-
-        // const configString = "eJztXW1z4jYQ_isMn64zuRa_QEj_yvXGI9sicQOY2iZtrtP_Xmytz4-8EthAgiH5whFsS6vdZ3e1L_L9O5bbLN2kyyB6ktHz-PfRv-M0_FNGxe7r-I_txHf98tObV5_3zXdffZ9W353qu6g-pfp9VP0TwgMzdXl8NxqvxUrWEziL6uoEHnZh6AkMPVGDutU_zrS5V3t6Ad_DcrZY5lGWbIokXf-cVD2myPOaIXwP1qlNqpY4aS77obrgw4W4-VRj-9MetI6-wG-4-inwUv1O5N8pEqL2FSJ9rq5rM94DcSQ2GkU0CyFmuM1zvoElKNx7WL9sBqchiBDiFV4n0n8p5ZTJv7ZJJuMgFoXYSerbNwWU3aUwyYqn3c9y_P377s9NlkQlgJzJ5L_dn8m6kNl1gngOiOFPDBHKPSj-BPSxgA7jIAsyuUmz4iJwRkwt4H4cdAJ4cKoLjv-1Im8yEKhGzaSOP1KkMYE5wMs5ITaG0Tko5sjNCZATweW4zTUfrT_CUd3vWhaBtCC3_DloEkzmPRA0F_CcA79Ipg8wab2qvez1pneMtANsIhZ4MPgcWMYVTK3robsaVfc9lmCzKdTiehXK_zgKRaR7wOYQvl-hmvTGfkcvx12lY6GW1ur7wAv4jjZJMZu8mDbGaR5tJR6TvMjE8kqUMAKWeO1buSmv2XbteioBJ8jL-T6EeBL2W7SkBQhlaia2lhzSYdgSauoNCkXUgBLt2VCqe13QD9nMTZbC0Z7AjewUpET87-WY4jTaruS6yI2q8fK6SfJnEaySx0ysr0Qz5m0oIyR9dwB6MO5O7R_jE9XmHfZasM_EIKrWhVH7QherpSn3XHMSElXlNNNf4_tvKTYVFIYM79ouwB8aRDWODQDlJ8G2R5izlxP-ghtpg7bNLEvCgOnEwLnGWpbmG5HnV7DT4KLqZk0GgL3xKfR_2tz3sLnZNpQ_noLVS3wVakAodYClMyXuI3Dyy9lUxIXBpzX6mzWxzKZ2KzBTD0BtZhIzRzNQSLVe1z_FvCoJRqRCTPW1PV5_Zh8N1ygpXoNod2smglyKLHq6XBKfHtOAqoUEwH80NvScz8igYJ_lpLXQHQVpjSIP0KcMM5BRZ9EM5Heio8NKaxXBwU3mzIxZjDS9-a8WDG2e0iI14mYdPifB30nxlG6LIBTr5_wiuIGVaoNSjadSPUroVTM4c00BKbzk7jhmRLlWo7afBt_BEB1dFsb64C5pPoIO82gaHDDF9tB_yRog1BxzmBXdL-YASbm6c61vtL4fcVcItxoENmahNbB7zysBGhFyErg00t4XYlG62oj1636oOcgcj9GHEGR7T39xDlzBbLQdRpIMYP5YSKQ1M7SolUEEo0lsYAiuoViIf4IkHu8Q2_y2yXJzwS19Di-Z6T8AZQlScq4DXhrJt-FL5WO2DpJ1nLwk8VYsBx6hqh4upzKzKhpy4i4b9bBhZF1KwyoGn1Q9JgAnyl5QmeKhvXTCj0u0YmoPAYnNBrP22LwK6UcHSidYeOElnLpBBqPf6Feo8Prol3AdhMUeAWVpkErjFKWxObz8IR7zK6k7VnM6E4CawwOsOhPQJcFxxHxgXLR40NSDhckDRIeyNKHWJoX9XKYaN4TOGqZZ_ZBkpdPjMJTzWaHvTBUwDbNJ9NoafbP2qC2vzZUAKWNRds2J01In5d4wEFGUbsv64gXQ7XayYwecCqNCDaQ1D2k-GB9-eyv8ltRrBhtNK0GF4I3ApnILwouuA7DqqvZ-InoUsg_b2brkMtydX63dRxUP_C7FA3-6H45vU7DAvBsx97fqJxrcxr-JLed2jPjzdbK8qJ_tJHtlryhcU712ofrdIjjXVsmZtm2AvsW3ajQ6ihikO4eRwIP5GNkbmm-qTw_RzXk1ZUTiA2gdppo5OSc8yovuOl5cZKOPXkrbuuCm81AuW0uXj9yvACS_WYVj7dTHrYMAyicMWobiuma5wKlp22m-VdIgec-mWzAyXOQsbWpsTYakB3xDCD70Zx_XFySBlRY8v1dgWYLpVYqshTvtigWD3g1h0HtfDGolJN49glUej-cGtdMSaDwpWDA4sQ5SwL2WLoVBIC4XS5kHYZqaziWdOYEr2LOeAVMN77ReTT3tAE-Yin7V58zmMHkSyibteqIuyOiVQeWSF6BqAHa0ZOqM1eEUKMn8r63ICpkZMqLtG_Z0aJRJsLdHxmea68rSXEcl3QFTr1uTixsQqlyV0Lb6KQu2iC7yR307eexkIFYlDo45dipIdYnI6NZzSpeSPMEqfZFVN3lQNsokL_LtBW1TLZ4F03IerCqia7Jhp2NNUyimktaj-Z7C5NbuiC4eyRR1d_FOpuckrIz11egdgAYmcGINkRkxRN3E_SOcz9W2ml5bbvp4RNMXRAnYRxPPQb1o71mNS3nrY_vGzqQh5cgyN2UjbltDgHC-ifOdTz15Mz2xtjR0RHorpR-st6twt4Wsfw6T55_fNzJLUpNuHDGGaTchiuBRbALvHSIXfhpRy1iNvqkpxPcOwKUu9gnATetgUWGywzIbWN-pw9fzQQUVhML2OnGCbZGYTcTN7QNhrVMU0x1qp4cxBJLZEECiHhdcdCGK6EYwNLs5DD0MAUMPHwlDDzeDofLdD-X58lIYQSTytw-KXIRP34M_IEktT69V-6BbQSWTTXEyT4ohUFWaz0X58t3RgUInTxgiWBFpUI8_15Zea28Ilsk77OU_GxpusqHhKPjJ1WaZvkqZq0bsZL174h1MCy-fYV7LZyNr_ZsnkNJqPT4Q0GmOxdqlfTbQ-sdxpUYl-6lLCeEIRhhKD1rRqZdPbApOJodoLTrpsC0PR30U5JqOVO0XHrY13xx-j2bHEFAcplksy9fg7TZ2SVQKJQ8WeXi51qIDh3UtJ307vh2BHfvdkfelWRy1LfXIqlrBbNjiY0Ck9SF0eEUErY8K99BNQIGMBuM77uIlo4n3LBkU4g5TiEcJ5udZDEuxW1vklHXQaA_Y90G41dL0aXGYfpIq9PkQbxT_Qsi698fHuV4ucCmV7F59PPRygXNqWN-S5Id7ucD14r7IxItctv1RvrkI-ntb8jMYSs2DUfsEPEEvSPsNLof88ojxARMp90y0JODFp0sbvEszie0d9LJ8brHbSA6289zFFAtI30d7qhJs13Eatc-CbuOsaixF8RRUt16ic9iWuo0Ze0DSfsQ6lepMGgak1oNp-1uIkQBTad8yt9b_sH_uE142W8hsrd4ptEmKCx0t3q-xNYMiziCmerGFGMM7hXAjrNVi1NDHWZfL0GpwNuiJaSJDA4pWicLNSshuIsGf5n_yH0kwG7D3UZ5YnfSdf7V1bR_EgJIGZup8Rtu8LSz-Jul623GOMyVYSjAk09AuIgoNhrTOuCCaIADTYE1e6jTMVGfl6Knr9Sd2-6-dV-975K6Xi3Fh1RMgkB_2RiHvp8kg1zyNErEMchlts9K1UFOVUbhFHGwWF_0PPLqYBNdVvFZNCYuGMPt_4NFNLkpdR3CvAHK6HGeM9tuIbtbheAX973-6Y0tn"
         // Декодирование и преобразование в объект
         let servicesData = {};
         if (configString) {
             try {
-                // servicesData = JSON.parse(decodeURIComponent(configString));
-
-
-                // // Декодируем base64
-                // const compressedBytes = Uint8Array.from(atob(configString), c => c.charCodeAt(0));
-                //
-                // // Распаковываем с zlib (через pako)
-                // const jsonString = pako.inflate(compressedBytes, { to: 'string' });
-                //
-                // // Парсим JSON
-                // servicesData = JSON.parse(jsonString);
                 // Исправляем base64 (если кодирование было через urlsafe_b64encode)
-                configString1 = fixBase64(configString);
+                fixConfigString = fixBase64(configString);
 
                 // Декодируем base64
-                const compressedBytes = Uint8Array.from(atob(configString1), c => c.charCodeAt(0));
+                const compressedBytes = Uint8Array.from(
+                    atob(fixConfigString), c => c.charCodeAt(0));
 
                 // Распаковываем через zlib (pako)
                 const jsonString = pako.inflate(compressedBytes, { to: 'string' });
@@ -371,6 +344,23 @@
 
             // Если label найден, возвращаем его текстовое содержимое, иначе возвращаем fieldId
             return label ? label.textContent.trim() : fieldId;
+        }
+
+        // Функция для исправляем ошибки URL-safe base64:
+        function fixBase64(encodedStr) {
+            // Исправляем возможные ошибки URL-safe base64:
+            // В стандартном base64 символы '+' и '/' заменяются на '-' и '_'
+            // при использовании urlsafe_b64encode в Python.
+            // Поэтому мы заменяем их обратно.
+            encodedStr = encodedStr.replace(/-/g, '+').replace(/_/g, '/');
+
+            // Base64-кодирование требует, чтобы длина строки была кратна 4.
+            // Если это не так, добавляем недостающие символы '=' в конец строки.
+            while (encodedStr.length % 4 !== 0) {
+                encodedStr += '=';
+            }
+
+            return encodedStr;
         }
 
         // Настройка Telegram WebApp
