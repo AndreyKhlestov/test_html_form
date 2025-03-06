@@ -242,7 +242,8 @@
             let selectedServices = document.querySelectorAll('.service-checkbox:checked');
             if (selectedServices.length === 0) {
                 alert("Выберите хотя бы одну услугу!");
-                // event.preventDefault();  // Отменяем отправку формы
+                event.preventDefault();  // Отменяем отправку формы
+                updateFields(); // Восстанавливаем доступ к полям после ошибки
                 return;
             }
 
@@ -282,6 +283,7 @@
             if (errors.length > 0) {
                 alert(errors.join("\n"));
                 event.preventDefault(); // Отменяем отправку формы
+                updateFields(); // Восстанавливаем доступ к полям после ошибки
                 return; // останавливаем дальнейшее выполнение кода
             }
 
