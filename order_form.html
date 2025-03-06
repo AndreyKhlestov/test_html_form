@@ -282,6 +282,7 @@
             if (errors.length > 0) {
                 alert(errors.join("\n"));
                 event.preventDefault(); // Отменяем отправку формы
+                return; // останавливаем дальнейшее выполнение кода
             }
 
             event.preventDefault();  // Предотвращаем стандартное поведение формы
