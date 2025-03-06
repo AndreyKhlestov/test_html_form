@@ -282,27 +282,17 @@
             if (errors.length > 0) {
                 alert(errors.join("\n"));
                 event.preventDefault(); // Отменяем отправку формы
+
                 // Восстанавливаем доступность полей
                 updateFields();
 
-                // Переключаем поля в readonly, затем обратно, чтобы Telegram WebView "обновил" их состояние
+                // Принудительно "перерисовываем" WebView для Telegram Desktop
+                const formContainer = document.getElementById('orderForm'); // Контейнер формы
+                formContainer.style.display = "none";  // Временно скрываем форму
                 setTimeout(() => {
-                    document.querySelectorAll('.field:not(.hidden) input, .field:not(.hidden) textarea').forEach(input => {
-                        input.readOnly = true;  // Временно делаем поле readonly
-                    });
+                    formContainer.style.display = "block";  // Показываем форму обратно
+                }, 100); // Короткая задержка для обновления WebView
 
-                    setTimeout(() => {
-                        document.querySelectorAll('.field:not(.hidden) input, .field:not(.hidden) textarea').forEach(input => {
-                            input.readOnly = false;  // Снова делаем поле активным
-                        });
-
-                        // Переносим фокус на первое доступное поле
-                        const firstVisibleInput = document.querySelector('.field:not(.hidden) input, .field:not(.hidden) textarea');
-                        if (firstVisibleInput) {
-                            firstVisibleInput.focus();
-                        }
-                    }, 50); // Небольшая задержка для перерисовки
-                }, 50);
                 return; // останавливаем дальнейшее выполнение кода
             }
 
