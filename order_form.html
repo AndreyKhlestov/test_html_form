@@ -316,44 +316,83 @@
 
 
 
-            let base64Image = ""
-            new FormData(form).forEach((value, key) => {
-                if (value instanceof File && value.name) {
-                    // Если файл (фото) выбран, конвертируем его в base64
-                    const reader = new FileReader();
-                    reader.onload = function (event) {
-                        // orderData[key] = event.target.result; // Сохраняем base64-строку в orderData
-                        // sendData(); // Отправляем данные после обработки фото
-                        base64Image = event.target.result;
-                    };
-                    reader.readAsDataURL(value); // Читаем файл как base64
-                } else if (typeof value === "string" && value.trim() !== "") {
-                    orderData[key] = value; // Добавляем только заполненные текстовые поля
-                }
-            });
+            // let base64Image = ""
+            // new FormData(form).forEach((value, key) => {
+            //     if (value instanceof File && value.name) {
+            //         // Если файл (фото) выбран, конвертируем его в base64
+            //         const reader = new FileReader();
+            //         reader.onload = function (event) {
+            //             // orderData[key] = event.target.result; // Сохраняем base64-строку в orderData
+            //             // sendData(); // Отправляем данные после обработки фото
+            //             base64Image = event.target.result;
+            //         };
+            //         reader.readAsDataURL(value); // Читаем файл как base64
+            //     } else if (typeof value === "string" && value.trim() !== "") {
+            //         orderData[key] = value; // Добавляем только заполненные текстовые поля
+            //     }
+            // });
 
 
 
+            form.addEventListener("submit", function (event) {
+                event.preventDefault();
 
+                const formData = new FormData(form);
+                let orderData = {};
 
-
-
-
-
+                // Обрабатываем все данные формы
+                formData.forEach((value, key) => {
+                    if (value instanceof File && value.name) {
+                        // Если файл (фото) выбран, конвертируем его в base64
+                        const reader = new FileReader();
+                        reader.onload = function (event) {
+                            orderData[key] = event.target.result; // Сохраняем base64-строку в orderData
+                            sendData(); // Отправляем данные после обработки фото
+                        };
+                        reader.readAsDataURL(value); // Читаем файл как base64
+                    } else if (typeof value === "string" && value.trim() !== "") {
+                        orderData[key] = value; // Добавляем только заполненные текстовые поля
+                    }
+                });
 
             // Собираем выбранные услуги
             let valueSelectedServices = Array.from(selectedServices).map(checkbox => checkbox.value);
 
-            // Формируем итоговый объект
-            let formData = {
-                "selected_services": valueSelectedServices, // Список выбранных услуг
-                "order_data": orderData, // Заполненные данные формы
-                "photo": base64Image // Добавляем изображение
-            };
+            // Функция для отправки данных в Telegram WebApp
+            function sendData() {
+                let finalData = {
+                    "selected_services": valueSelectedServices, // Список выбранных услуг
+                    "order_data": orderData // Заполненные данные формы
+                };
 
-            // Отправка данных в Telegram WebApp
-            tg.sendData(JSON.stringify(formData));
-            tg.close()
+                // Отправляем данные в Telegram WebApp
+                tg.sendData(JSON.stringify(finalData));
+                tg.close();
+            }
+
+            // Если фото не было выбрано, отправляем сразу
+            if (!formData.get("photo")) {
+                sendData();
+            }
+
+
+
+
+
+
+            // // Собираем выбранные услуги
+            // let valueSelectedServices = Array.from(selectedServices).map(checkbox => checkbox.value);
+            //
+            // // Формируем итоговый объект
+            // let formData = {
+            //     "selected_services": valueSelectedServices, // Список выбранных услуг
+            //     "order_data": orderData, // Заполненные данные формы
+            //     "photo": base64Image // Добавляем изображение
+            // };
+            //
+            // // Отправка данных в Telegram WebApp
+            // tg.sendData(JSON.stringify(formData));
+            // tg.close()
         });
 
 
