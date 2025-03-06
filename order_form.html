@@ -165,7 +165,8 @@
         let servicesData = {};
         if (configString) {
             try {
-                servicesData = JSON.parse(decodeURIComponent(configString));
+                // servicesData = JSON.parse(decodeURIComponent(configString));
+                servicesData = JSON.parse(atob(configString));
             } catch (e) {
                 console.error("Ошибка обработки конфигурации:", e);
             }
