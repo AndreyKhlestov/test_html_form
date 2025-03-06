@@ -297,27 +297,49 @@
                 return; // останавливаем дальнейшее выполнение кода
             }
 
-            // Функция для возврата фокуса в первое незаполненное поле
-            function focusFirstEmptyField() {
-                const firstEmptyField = document.querySelector('.field:not(.hidden) input, .field:not(.hidden) textarea');
-                if (firstEmptyField) {
-                    firstEmptyField.focus(); // Устанавливаем фокус в первое доступное поле
-                }
-            }
-
             event.preventDefault();  // Предотвращаем стандартное поведение формы
 
             // Собираем данные из формы в order_data (только заполненные поля)
             let orderData = {};
+            // new FormData(form).forEach((value, key) => {
+            //     if (value instanceof File && value.name) {
+            //         if (value.name) { // Проверяем, был ли выбран файл
+            //             orderData[key] = value.name; // Передаем только имя файла
+            //         }
+            //     } else if (typeof value === "string" && value.trim() !== "") {
+            //         orderData[key] = value; // Добавляем только заполненные текстовые поля
+            //     }
+            // });
+
+
+
+
+
+
+            let base64Image = ""
             new FormData(form).forEach((value, key) => {
-                if (value instanceof File) {
-                    if (value.name) { // Проверяем, был ли выбран файл
-                        orderData[key] = value.name; // Передаем только имя файла
-                    }
+                if (value instanceof File && value.name) {
+                    // Если файл (фото) выбран, конвертируем его в base64
+                    const reader = new FileReader();
+                    reader.onload = function (event) {
+                        // orderData[key] = event.target.result; // Сохраняем base64-строку в orderData
+                        // sendData(); // Отправляем данные после обработки фото
+                        base64Image = event.target.result;
+                    };
+                    reader.readAsDataURL(value); // Читаем файл как base64
                 } else if (typeof value === "string" && value.trim() !== "") {
                     orderData[key] = value; // Добавляем только заполненные текстовые поля
                 }
             });
+
+
+
+
+
+
+
+
+
 
             // Собираем выбранные услуги
             let valueSelectedServices = Array.from(selectedServices).map(checkbox => checkbox.value);
@@ -325,7 +347,8 @@
             // Формируем итоговый объект
             let formData = {
                 "selected_services": valueSelectedServices, // Список выбранных услуг
-                "order_data": orderData // Заполненные данные формы
+                "order_data": orderData, // Заполненные данные формы
+                "photo": base64Image // Добавляем изображение
             };
 
             // Отправка данных в Telegram WebApp
