@@ -282,17 +282,6 @@
             if (errors.length > 0) {
                 alert(errors.join("\n"));
                 event.preventDefault(); // Отменяем отправку формы
-
-                // Восстанавливаем доступность полей
-                updateFields();
-
-                // Принудительно "перерисовываем" WebView для Telegram Desktop
-                const formContainer = document.getElementById('orderForm'); // Контейнер формы
-                formContainer.style.display = "none";  // Временно скрываем форму
-                setTimeout(() => {
-                    formContainer.style.display = "block";  // Показываем форму обратно
-                }, 100); // Короткая задержка для обновления WebView
-
                 return; // останавливаем дальнейшее выполнение кода
             }
 

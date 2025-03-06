@@ -159,7 +159,9 @@
 
             // Собираем данные из формы
             new FormData(form).forEach((value, key) => {
-                formData[key] = value;
+                if (value.trim() !== "") { // Добавляем только заполненные поля
+                    formData[key] = value;
+                }
             });
 
             // Отправка данных в Telegram WebApp
