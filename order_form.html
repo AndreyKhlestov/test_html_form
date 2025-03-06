@@ -243,7 +243,6 @@
             if (selectedServices.length === 0) {
                 alert("Выберите хотя бы одну услугу!");
                 event.preventDefault();  // Отменяем отправку формы
-                updateFields(); // Восстанавливаем доступ к полям после ошибки
                 return;
             }
 
@@ -283,8 +282,16 @@
             if (errors.length > 0) {
                 alert(errors.join("\n"));
                 event.preventDefault(); // Отменяем отправку формы
-                updateFields(); // Восстанавливаем доступ к полям после ошибки
+                setTimeout(() => focusFirstEmptyField(), 100); // Возвращаем фокус в первое незаполненное поле
                 return; // останавливаем дальнейшее выполнение кода
+            }
+
+            // Функция для возврата фокуса в первое незаполненное поле
+            function focusFirstEmptyField() {
+                const firstEmptyField = document.querySelector('.field:not(.hidden) input, .field:not(.hidden) textarea');
+                if (firstEmptyField) {
+                    firstEmptyField.focus(); // Устанавливаем фокус в первое доступное поле
+                }
             }
 
             event.preventDefault();  // Предотвращаем стандартное поведение формы
