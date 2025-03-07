@@ -310,7 +310,7 @@
                 if (value instanceof File && value.name) {
                     const fileFormData = new FormData();
                     fileFormData.append("file", value);
-                    fileFormData.append("init_data", Telegram.WebApp.initData); // Передаём hash
+                    // fileFormData.append("init_data", Telegram.WebApp.initData);
 
                     const uploadPromise = fetch(uploadUrl, {
                         method: "POST",
